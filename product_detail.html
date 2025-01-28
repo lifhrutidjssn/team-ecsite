@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+
+<link href="/css/reset.css" th:href="@{/css/reset.css}" rel="stylesheet" />
+<link href="/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+
+<title>falcon's nest</title>
+</head>
+<body>
+
+<header th:insert="fragments/page_header::pageHeader"></header>
+
+<main>
+
+  <div class="container">
+    <table class="top">
+      <caption><label th:text="${product.productName}"></label>（<label th:text="${product.productNameKana}"></label>）</caption>
+      <tr>
+        <th>画像</th><th>価格</th><th>発売元</th><th>発売年月日</th>
+      </tr>
+      <tr>
+        <td class="imageDetail">
+          <img class="itemImageDetail" th:src="${product.imageFullPath}" alt="" />
+        </td>
+        <td class="number" th:text="${product.price} + '円'"/>
+        <td th:text="${product.releaseCompany}"/>
+        <td th:text="${product.releaseDate}"/>
+      </tr>
+    </table>
+    <label id="description">商品説明</label>
+    <textarea cols="75" rows="5" readonly th:text="${product.productDescription}" ></textarea>
+      
+    <hr />
+    <div class="buttonArea">
+      <label>購入個数</label>
+      <input type="number" id="productCount" name="productCount" class="count number" value="0" min="0" step="1"/>
+      <input type="hidden" id="productId" name="productId" th:value="${product.id}"/>
+      <button class="cartButton">カートに追加</button>
+    </div>
+  </div>
+</main>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+/*
+ * 画面表示時 (onLoad) に動作する処理群
+ */
+document.addEventListener("DOMContentLoaded", event => {
+  const cartBtn = document.querySelector(".cartButton");
+  cartBtn.addEventListener("click", () => {
+    const productId = document.getElementById("productId").value;
+    const productCount = document.getElementById("productCount").value;
+    
+    addCart(productId, productCount);
+  });
+});
+
+/**
+ * カートに追加処理をおこなう
+ * @param productId 商品情報ID
+ * @param productCount 商品個数
+ */
+function addCart(productId, productCount) {
+  if (productCount == 0) {
+    alert("個数が0です。");
+    return ;  
+  }
+  
+  location.replace(`/team2411/cart/add?productId=${productId}&productCount=${productCount}`);
+}
+/*]]>*/
+</script>
+</body>
+</html>
